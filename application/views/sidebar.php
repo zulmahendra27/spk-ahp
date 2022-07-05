@@ -37,8 +37,8 @@
             <i class="menu-icon fa fa-bookmark"></i>Penilaian
           </a>
           <ul class="sub-menu children dropdown-menu">
-            <li><i class="fa fa-bars"></i><a href="<?= base_url('penilaiankriteria'); ?>">Antar Kriteria</a></li>
-            <li><i class="fa fa-user"></i><a href="<?= base_url('penilaianalternatif'); ?>">Antar Alternatif</a></li>
+            <li><i class="fa fa-bars"></i><a href="<?= base_url('penilaian/kriteria'); ?>">Antar Kriteria</a></li>
+            <li><i class="fa fa-user"></i><a href="<?= base_url('penilaian/alternatif'); ?>">Antar Alternatif</a></li>
           </ul>
         </li>
 

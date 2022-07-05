@@ -1,7 +1,8 @@
 <div class="card">
   <div class="card-header">
     <strong class="card-title"><?= $title; ?></strong>
-    <a href="<?= base_url('penilaian/matriks') ?>" class="btn btn-sm btn-info float-right">Lihat Matriks</a>
+    <a href="<?= base_url('penilaian/matriks/' . $kriteria) ?>" class="btn btn-sm btn-info float-right">Lihat
+      Matriks</a>
   </div>
   <div class="card-body">
     <div class="row">
@@ -10,8 +11,8 @@
           <table class="table text-center">
             <thead>
               <tr>
-                <th colspan="2">Kriteria A</th>
-                <th colspan="2">Kriteria B</th>
+                <th colspan="2">Alternatif A</th>
+                <th colspan="2">Alternatif B</th>
                 <th>Nilai</th>
               </tr>
             </thead>
@@ -23,7 +24,7 @@
                     $nilai = 1;
                     if ($result_nilai) :
                       foreach ($result_nilai as $rs) :
-                        if ($rs->kriteria1 == $result[$x]->id_kriteria && $rs->kriteria2 == $result[$y]->id_kriteria) :
+                        if ($rs->alternatif1 == $result[$x]->id_alternatif && $rs->alternatif2 == $result[$y]->id_alternatif) :
                           $nilai = $rs->nilai;
                         endif;
                       endforeach;
@@ -31,7 +32,7 @@
               ?>
 
               <tr class="justify-content-center">
-                <td><?= $result[$x]->nama_kriteria ?></td>
+                <td><?= $result[$x]->nama_alternatif ?></td>
 
                 <td><input type="radio" name="pilihan-<?= $urut ?>" value="1" class="form-check-input"
                     <?= $nilai >= 1 ? 'checked' : '' ?>></td>
@@ -39,7 +40,7 @@
                 <td><input type="radio" name="pilihan-<?= $urut ?>" value="2" class="form-check-input"
                     <?= $nilai < 1 ? 'checked' : '' ?>></td>
 
-                <td><?= $result[$y]->nama_kriteria ?></td>
+                <td><?= $result[$y]->nama_alternatif ?></td>
 
                 <td><input type="text" name="nilai-<?= $urut ?>" required
                     value="<?= ($nilai >= 1 ? $nilai : (round(1 / $nilai))); ?>" class="form-control form-control-sm">
@@ -52,7 +53,7 @@
               else : ?>
 
               <tr>
-                <th colspan="5">-- Tidak ada kriteria yang bisa dibandingkan --</th>
+                <th colspan="5">-- Tidak ada alternatif yang bisa dibandingkan --</th>
               </tr>
 
               <?php endif; ?>

@@ -6,11 +6,11 @@
     <table class="table table-bordered">
 
       <tr>
-        <th>Kriteria</th>
+        <th>Alternatif</th>
 
         <?php if ($result) : foreach ($result as $rs) : ?>
 
-        <th><?= $rs->nama_kriteria ?></th>
+        <th><?= $rs->nama_alternatif ?></th>
 
         <?php endforeach;
         endif; ?>
@@ -19,7 +19,7 @@
       <?php if ($result) : for ($x = 0; $x < count($result); $x++) : ?>
 
       <tr>
-        <th><?= $result[$x]->nama_kriteria ?></th>
+        <th><?= $result[$x]->nama_alternatif ?></th>
 
         <?php for ($y = 0; $y < count($result); $y++) : ?>
 
@@ -65,17 +65,17 @@
 
 <div class="card">
   <div class="card-header">
-    <strong class="card-title">Matriks Nilai Kriteria</strong>
+    <strong class="card-title">Matriks Nilai Alternatif</strong>
   </div>
   <div class="card-body">
     <table class="table table-bordered">
 
       <tr>
-        <th>Kriteria</th>
+        <th>Alternatif</th>
 
         <?php if ($result) : foreach ($result as $rs) : ?>
 
-        <th><?= $rs->nama_kriteria ?></th>
+        <th><?= $rs->nama_alternatif ?></th>
 
         <?php endforeach;
         endif; ?>
@@ -88,7 +88,7 @@
       <?php if ($result) : for ($x = 0; $x < count($result); $x++) : ?>
 
       <tr>
-        <th><?= $result[$x]->nama_kriteria ?></th>
+        <th><?= $result[$x]->nama_alternatif ?></th>
 
         <?php for ($y = 0; $y < count($result); $y++) : ?>
 

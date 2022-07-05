@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 /**
  *
- * Model Penilaian_kriteria_model
+ * Model Penilaian_model
  *
  * This Model for ...
  * 
@@ -16,7 +16,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  *
  */
 
-class Penilaian_kriteria_model extends CI_Model
+class Penilaian_model extends CI_Model
 {
 
   // ------------------------------------------------------------------------
@@ -30,25 +30,36 @@ class Penilaian_kriteria_model extends CI_Model
 
 
   // ------------------------------------------------------------------------
-  public function getAll()
+  public function getAllKriteria()
   {
     return $this->db->get('penilaian_kriteria')->result();
   }
 
-  public function insert($data)
+  public function getAllAlternatif($id_kriteria)
+  {
+    return $this->db->get_where('penilaian_alternatif', ['id_kriteria' => $id_kriteria])->result();
+  }
+
+  public function getRI($n)
+  {
+    return $this->db->get_where('ri', ['jumlah' => $n])->row();
+  }
+
+  public function insertKriteria($data)
   {
     $this->db->query('TRUNCATE TABLE penilaian_kriteria');
     return $this->db->insert_batch('penilaian_kriteria', $data);
   }
 
-  public function update($data)
+  public function insertAlternatif($data, $id_kriteria)
   {
-    return $this->db->update_batch('penilaian_kriteria', $data, ['kriteria1', 'kriteria2']);
+    $this->db->delete('penilaian_alternatif', ['id_kriteria' => $id_kriteria]);
+    return $this->db->insert_batch('penilaian_alternatif', $data);
   }
 
   // ------------------------------------------------------------------------
 
 }
 
-/* End of file Penilaian_kriteria_model.php */
-/* Location: ./application/models/Penilaian_kriteria_model.php */
+/* End of file Penilaian_model.php */
+/* Location: ./application/models/Penilaian_model.php */
