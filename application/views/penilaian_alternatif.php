@@ -1,8 +1,16 @@
 <div class="card">
   <div class="card-header">
     <strong class="card-title"><?= $title; ?></strong>
-    <a href="<?= base_url('penilaian/matriks/' . $kriteria) ?>" class="btn btn-sm btn-info float-right">Lihat
-      Matriks</a>
+    <div class="float-right">
+      <?php foreach ($rs_kriteria as $rs) : if ($rs->id_kriteria == ($kriteria - 1)) : ?>
+      <a href="<?= base_url('penilaian/alternatif/' . ($kriteria - 1)) ?>" class="btn btn-sm btn-warning">Previous</a>
+      <?php endif;
+        if ($rs->id_kriteria == ($kriteria + 1)) : ?>
+      <a href="<?= base_url('penilaian/alternatif/' . ($kriteria + 1)) ?>" class="btn btn-sm btn-warning">Next</a>
+      <?php endif;
+      endforeach; ?>
+      <a href="<?= base_url('penilaian/matriks/' . $kriteria) ?>" class="btn btn-sm btn-info">Lihat Matriks</a>
+    </div>
   </div>
   <div class="card-body">
     <div class="row">

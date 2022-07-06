@@ -47,7 +47,8 @@ class Penilaian_model extends CI_Model
 
   public function insertKriteria($data)
   {
-    $this->db->query('TRUNCATE TABLE penilaian_kriteria');
+    $this->db->delete('penilaian_kriteria', ['id_pk != null']);
+    $this->db->query('ALTER TABLE penilaian_kriteria AUTO_INCREMENT=1');
     return $this->db->insert_batch('penilaian_kriteria', $data);
   }
 
@@ -55,6 +56,19 @@ class Penilaian_model extends CI_Model
   {
     $this->db->delete('penilaian_alternatif', ['id_kriteria' => $id_kriteria]);
     return $this->db->insert_batch('penilaian_alternatif', $data);
+  }
+
+  public function insertPVKriteria($data)
+  {
+    $this->db->delete('prioritas_kriteria', ['id_pvk != null']);
+    $this->db->query('ALTER TABLE prioritas_kriteria AUTO_INCREMENT=1');
+    return $this->db->insert_batch('prioritas_kriteria', $data);
+  }
+
+  public function insertPVAlternatif($data, $id_kriteria)
+  {
+    $this->db->delete('prioritas_alternatif', ['id_kriteria' => $id_kriteria]);
+    return $this->db->insert_batch('prioritas_alternatif', $data);
   }
 
   // ------------------------------------------------------------------------

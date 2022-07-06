@@ -46,12 +46,13 @@ class Penilaian extends CI_Controller
 
   public function alternatif($id_kriteria = null)
   {
+    $rs_kriteria = $this->kriteria->getAll();
     if ($id_kriteria == null) {
       $data = [
         'root' => 'penilaian',
         'title' => 'Pilih Kriteria Untuk Membandingkan Alternatif',
         'page' => 'kriteria_select',
-        'result' => $this->kriteria->getAll()
+        'result' => $rs_kriteria
       ];
 
       $this->load->view('page', $data);
@@ -65,6 +66,7 @@ class Penilaian extends CI_Controller
           'root' => 'penilaian',
           'title' => 'Penilaian Alternatif - Kriteria ' . $kriteria[0]->nama_kriteria,
           'page' => 'penilaian_alternatif',
+          'rs_kriteria' => $rs_kriteria,
           'kriteria' => $id_kriteria,
           'result' => $this->alternatif->getAll(),
           'result_nilai' => $this->pk->getAllAlternatif($id_kriteria)
@@ -85,36 +87,37 @@ class Penilaian extends CI_Controller
 
       if ($rs_nilai) {
         $data = $this->setMatriks('kriteria', $rs_nilai);
+        $data += [
+          'root' => 'penilaian',
+          'title' => 'Matriks Kriteria',
+          'page' => 'kriteria_matriks'
+        ];
+
+        $this->load->view('page', $data);
       } else {
         echo "<script>alert('Not Found');</script>";
         echo "<script>window.location='" . base_url('penilaian/kriteria') . "';</script>";
       }
-
-      $data += [
-        'root' => 'penilaian',
-        'title' => 'Matriks Kriteria',
-        'page' => 'kriteria_matriks'
-      ];
-
-      $this->load->view('page', $data);
     } else {
       $kriteria = $this->kriteria->getById($id_kriteria);
       $rs_nilai = $this->pk->getAllAlternatif($id_kriteria);
 
       if ($kriteria && $rs_nilai) {
-        $data = $this->setMatriks('alternatif', $rs_nilai);
+        $rs_kriteria = $this->kriteria->getAll();
+        $data = $this->setMatriks('alternatif', $rs_nilai, $id_kriteria);
+        $data += [
+          'root' => 'penilaian',
+          'title' => 'Matriks Alternatif - Kriteria ' . $kriteria[0]->nama_kriteria,
+          'page' => 'alternatif_matriks',
+          'rs_kriteria' => $rs_kriteria,
+          'kriteria' => $id_kriteria,
+        ];
+
+        $this->load->view('page', $data);
       } else {
         echo "<script>alert('Not Found');</script>";
         echo "<script>window.location='" . base_url('penilaian/alternatif/' . $id_kriteria) . "';</script>";
       }
-
-      $data += [
-        'root' => 'penilaian',
-        'title' => 'Matriks Alternatif - Kriteria ' . $kriteria[0]->nama_kriteria,
-        'page' => 'alternatif_matriks'
-      ];
-
-      $this->load->view('page', $data);
     }
   }
 
@@ -134,6 +137,7 @@ class Penilaian extends CI_Controller
             $pilihanName = 'pilihan-' . $urut;
             $nilaiName = 'nilai-' . $urut;
 
+            // pengambilan input dari pilihan dan nilai dari user
             $pilihan = $this->input->post($pilihanName, true);
             $nilai = $this->input->post($nilaiName, true);
 
@@ -147,6 +151,7 @@ class Penilaian extends CI_Controller
               $bobot = 1;
             }
 
+            // data table penilaian
             if ($jenis == 'kriteria') {
               $penilaian[] = [
                 'kriteria1' => $result[$x]->id_kriteria,
@@ -177,7 +182,7 @@ class Penilaian extends CI_Controller
     }
   }
 
-  private function setMatriks($jenis, $rs_nilai)
+  private function setMatriks($jenis, $rs_nilai, $id_kriteria = null)
   {
     if ($jenis == 'kriteria') {
       $result = $this->kriteria->getAll();
@@ -211,6 +216,7 @@ class Penilaian extends CI_Controller
               $rs2 = $rs->alternatif2;
             }
 
+            // pengisian matriks
             if ($resultX == $rs1 && $resultY == $rs2) {
               if ($rs->nilai >= 1) {
                 $matriks[$x][$y] = $rs->nilai;
@@ -252,12 +258,37 @@ class Penilaian extends CI_Controller
         // nilai eigen
         $eigen[$x] = $jmlmpb[$x] * $pv[$x];
         $totalEigen += $eigen[$x];
+
+        // data table prioritas
+        if ($jenis == 'kriteria') {
+          $data_pv[] = [
+            'id_kriteria' => $result[$x]->id_kriteria,
+            'nilai' => round($pv[$x], 5)
+          ];
+        } else {
+          $data_pv[] = [
+            'id_kriteria' => $id_kriteria,
+            'id_alternatif' => $result[$x]->id_alternatif,
+            'nilai' => round($pv[$x], 5)
+          ];
+        }
       }
 
+      // nilai consistency index
       $ci = ($totalEigen - count($result)) / (count($result) - 1);
+      // nilai random index dari table ri
       $ri = $this->pk->getRI(count($result));
+      // nilai consistency ratio. Apabila melebihi 0.1, tidak konsisten, harus mengulang penilaian berpasangan
       $cr = $ci / $ri->nilai;
 
+      // insert into table prioritas
+      if ($jenis == 'kriteria') {
+        $this->pk->insertPVKriteria($data_pv);
+      } else {
+        $this->pk->insertPVAlternatif($data_pv, $id_kriteria);
+      }
+
+      // data yang dikembalikan ke tampilan matriks
       $data = [
         'result' => $result,
         'matriks' => $matriks,

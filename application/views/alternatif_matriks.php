@@ -1,6 +1,15 @@
 <div class="card">
   <div class="card-header">
     <strong class="card-title">Matriks Perbandingan Berpasangan</strong>
+    <div class="float-right">
+      <?php foreach ($rs_kriteria as $rs) : if ($rs->id_kriteria == ($kriteria - 1)) : ?>
+      <a href="<?= base_url('penilaian/matriks/' . ($kriteria - 1)) ?>" class="btn btn-sm btn-warning">Previous</a>
+      <?php endif;
+        if ($rs->id_kriteria == ($kriteria + 1)) : ?>
+      <a href="<?= base_url('penilaian/matriks/' . ($kriteria + 1)) ?>" class="btn btn-sm btn-warning">Next</a>
+      <?php endif;
+      endforeach; ?>
+    </div>
   </div>
   <div class="card-body">
     <table class="table table-bordered">
