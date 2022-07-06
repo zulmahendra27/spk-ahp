@@ -32,11 +32,11 @@
 
         <h3 class="menu-title">Penilaian</h3><!-- /.menu-title -->
 
-        <li class="menu-item-has-children dropdown <?= $root == 'penilaian' ? 'active' : ''; ?>">
+        <li class="menu-item-has-children dropdown <?= $root == 'penilaian' ? 'active show' : ''; ?>">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="menu-icon fa fa-bookmark"></i>Penilaian
           </a>
-          <ul class="sub-menu children dropdown-menu">
+          <ul class="sub-menu children dropdown-menu <?= $root == 'penilaian' ? 'show' : ''; ?>">
             <li><i class="fa fa-bars"></i><a href="<?= base_url('penilaian/kriteria'); ?>">Antar Kriteria</a></li>
             <li><i class="fa fa-user"></i><a href="<?= base_url('penilaian/alternatif'); ?>">Antar Alternatif</a></li>
           </ul>
